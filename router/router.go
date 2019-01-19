@@ -3,8 +3,8 @@ package router
 import (
 	"io"
 	"os"
-	"welfare/logger"
-	"welfare/setting"
+
+	"github.com/jeekcode/test/logger"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -21,7 +21,7 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	//r.Use(logger.LogGin()) //自己用zap封装的库
 	r.Use(gin.Recovery()) //使用默认的恢复
-	gin.SetMode(setting.ServerSetting.Model)
+	//gin.SetMode(setting.ServerSetting.Model)
 	apiv1 := r.Group("/api/v1")
 	{
 		//获取标签列表

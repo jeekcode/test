@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"welfare/logger"
-	"welfare/router"
-	"welfare/setting"
+
+	"github.com/jeekcode/test/logger"
+	"github.com/jeekcode/test/router"
+	"github.com/jeekcode/test/setting"
 )
 
 var mTime int64

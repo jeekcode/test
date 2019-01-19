@@ -1,7 +1,7 @@
-package setting
+package config
 
 import (
-	"welfare/logger"
+	"github.com/jeekcode/test/logger"
 
 	"go.uber.org/zap"
 

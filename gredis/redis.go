@@ -2,19 +2,20 @@ package gredis
 
 import (
 	"time"
-	"welfare/setting"
+
+	"github.com/jeekcode/test/config"
 
 	"github.com/gomodule/redigo/redis"
 )
 
-var RedisConn *redis.Pool
+var redisConn *redis.Pool
 
 func init() {
-	RedisConn = &redis.Pool{
+	redisConn = &redis.Pool{
 		MaxIdle:   10,
 		MaxActive: 10,
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", setting.RedisSetting.Host)
+			c, err := redis.Dial("tcp", config.RedisSetting.Host)
 			if err != nil {
 				return nil, err
 			}
@@ -27,5 +28,5 @@ func init() {
 	}
 }
 func Get() redis.Conn {
-	return RedisConn.Get()
+	return redisConn.Get()
 }
