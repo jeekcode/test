@@ -7,16 +7,15 @@ import (
 	"github.com/jeekcode/test/logger"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
+//InitRouter init
 func InitRouter() *gin.Engine {
-	defer logger.Sync()
 	r := gin.New() //不带中间件的路由
 	// 创建带有默认中间件的路由:
 	// 日志与恢复中间件
 	//r := gin.Default()
-	f, _ := os.OpenFile("welfare.log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0)
+	f, _ := os.OpenFile(logger.Prefix+".log", os.O_CREATE|os.O_RDWR|os.O_APPEND, 0)
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
 	r.Use(gin.Logger())
 	//r.Use(logger.LogGin()) //自己用zap封装的库
@@ -33,7 +32,6 @@ func InitRouter() *gin.Engine {
 		//删除指定标签
 		apiv1.DELETE("/tags/:id", deleteTag)
 	}
-	logger.Info("router Ini", zap.String("activvity", "walfare"))
 	return r
 }
 func getTags(c *gin.Context) {
@@ -42,9 +40,18 @@ func getTags(c *gin.Context) {
 		"message": str,
 	})
 }
+
+type addInfo struct {
+	Name    string `json:"name"`
+	Content string `json:"content"`
+}
+
 func addTag(c *gin.Context) {
+	var info addInfo
+	c.BindJSON(&info)
 	c.JSON(200, gin.H{
-		"message": "addTag",
+		"name":    info.Name,
+		"content": info.Content,
 	})
 }
 func editTag(c *gin.Context) {

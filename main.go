@@ -5,18 +5,17 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/jeekcode/test/config"
 	"github.com/jeekcode/test/logger"
 	"github.com/jeekcode/test/router"
-	"github.com/jeekcode/test/setting"
 )
 
 var mTime int64
 
 func main() {
-
+	logger.Init()
 	fmt.Println("Hello")
-	setting.SetUp()
-	logger.Info("start")
+	config.SetUp()
 	go Tick()
 	r := router.InitRouter()
 	server := &http.Server{
@@ -26,17 +25,9 @@ func main() {
 		WriteTimeout: 5,
 	}
 	server.ListenAndServe()
-
-	// c := gredis.Get()
-	// c.Do("SET", "TEST", "1")
-	// v, err := c.Do("GET", "TEST")
-	// value, _ := redis.String(v, err)
-	// fmt.Println(value)
-	// c.Close()
-	// logger.Debug("replace debug")
-	// logger.Info("replace info")
-	// logger.Sync()
 }
+
+//Tick ...
 func Tick() {
 	tick := time.NewTicker(10 * time.Second)
 	for {
@@ -46,7 +37,7 @@ func Tick() {
 			unix := now.Unix()
 			if now.Minute() == 0 && now.Hour() == 0 && unix-mTime > 300 {
 				mTime = unix
-				timeS := now.Format("2019-01-06")
+				timeS := now.Format("2006-01-02")
 				logger.ReplaceGlobals(timeS)
 			}
 		default:

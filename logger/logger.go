@@ -17,7 +17,7 @@ var encoderCfg = zapcore.EncoderConfig{
 	TimeKey:        "Time",
 	LevelKey:       "Level",
 	NameKey:        "Name",
-	CallerKey:      "",
+	CallerKey:      "Call",
 	MessageKey:     "Msg",
 	StacktraceKey:  "S",
 	LineEnding:     zapcore.DefaultLineEnding,
@@ -27,20 +27,25 @@ var encoderCfg = zapcore.EncoderConfig{
 	EncodeCaller:   zapcore.ShortCallerEncoder,
 }
 var level = zap.NewAtomicLevel()
-var prefix string
+
+// Prefix 程序名
+var Prefix string
+
+func init() {
+	ss := strings.Split(os.Args[0], string(os.PathSeparator))
+	Prefix = ss[len(ss)-1]
+}
 
 // Init 模块初始化
 func Init() bool {
-	ss := strings.Split(os.Args[0], "/")
-	prefix = ss[len(ss)-1]
 	timeS := time.Now().Format("2006-01-02")
 	cfg := zap.Config{
 		Level:            level,
 		Development:      true,
 		Encoding:         "json",
 		EncoderConfig:    encoderCfg,
-		OutputPaths:      []string{prefix + timeS + ".log", "stdout"},
-		ErrorOutputPaths: []string{prefix + timeS + ".log", "stdout"},
+		OutputPaths:      []string{Prefix + "_" + timeS + ".log", "stdout"},
+		ErrorOutputPaths: []string{Prefix + "_" + timeS + ".log", "stdout"},
 	}
 	logger, err := cfg.Build(zap.AddCallerSkip(1))
 	if err != nil {
@@ -118,8 +123,8 @@ func ReplaceGlobals(time string) {
 		Development:      true,
 		Encoding:         "json",
 		EncoderConfig:    encoderCfg,
-		OutputPaths:      []string{"welfare_" + time + ".log"},
-		ErrorOutputPaths: []string{"welfare_" + time + ".log"},
+		OutputPaths:      []string{Prefix + "_" + time + ".log", "stdout"},
+		ErrorOutputPaths: []string{Prefix + "_" + time + ".log", "stdout"},
 	}
 	logger, _ := cfg.Build(zap.AddCallerSkip(1))
 	zap.ReplaceGlobals(logger)
